@@ -1,0 +1,55 @@
+{
+    "MapSignalFunction": [ {
+        "CR_Datc_DrTempDispC": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempDrC"
+        },
+        "CR_Datc_DrTempDispF": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempDrF"
+        },
+        "CR_Datc_PsTempDispC": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempPsC"
+        },
+        "CR_Datc_PsTempDispF": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempPsF"
+        },
+        "CR_Datc_RearDrTempDispC": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempRearC"
+        },
+        "CR_Datc_RearDrTempDispF": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setTempRearF"
+        },
+        "CF_Datc_TempDispUnit": {
+            "Type": "SET",
+            "Class": "TempSide",
+            "Method": "setUnit"
+        },
+        "CF_Datc_ModDisp": {
+            "Type": "SET",
+            "Class": "SeatMode",
+            "Method": "setSeatModeDriver"
+        },
+        "CF_Datc_PSModDisp": {
+            "Type": "SET",
+            "Class": "SeatMode",
+            "Method": "setSeatModePassenger"
+        },
+        "CF_Datc_FrontBlwDisp": {
+            "Type": "SET",
+            "Class": "Blower",
+            "Method": "setBlwrStep"
+        }
+    } ],
+    "Models": ["Blower", "Btn", "SeatMode", "TempSide"]
+}

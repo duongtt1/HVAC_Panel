@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/arrow-up.png</file>
+        <file>images/autodefog.png</file>
+        <file>images/chevron.png</file>
+        <file>images/chevron__1_-removebg-preview.png</file>
+        <file>images/left-arrow.png</file>
+        <file>images/recyle.png</file>
+        <file>images/rrdefog.png</file>
+        <file>images/Screenshot_5-removebg-preview.png</file>
+        <file>images/up.png</file>
+        <file>images/ventD.png</file>
+        <file>images/vip-left.png</file>
+        <file>images/vip-right.png</file>
+        <file>Common/AutoButton.qml</file>
+        <file>Common/BlowerItem.qml</file>
+        <file>Common/CustomButton.qml</file>
+        <file>Common/IconButton.qml</file>
+        <file>Common/TextButton.qml</file>
+        <file>Components/TempDisplay.qml</file>
+        <file>Components/Dashboard.qml</file>
+        <file>Components/SeatLeftArea.qml</file>
+        <file>Components/SeatRightArea.qml</file>
+        <file>Components/BtnCtrlArea.qml</file>
+        <file>js/utils.js</file>
+        <file>Common/DrvOnlyButton.qml</file>
+    </qresource>
+</RCC>
