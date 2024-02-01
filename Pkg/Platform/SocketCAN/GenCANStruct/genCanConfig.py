@@ -16,8 +16,6 @@ for m in cfg["MapSignalFunction"]:
     signal, val = next(iter(m.items()))
     signals.append(signal)
 
-print(signals)
-
 # Filter CAN IDs based on configuration
 filtered_messages = [msg for msg in db.messages if msg.frame_id in generate_can_ids]
 

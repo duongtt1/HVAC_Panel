@@ -14,7 +14,7 @@ private:
 
     std::array<bool, static_cast<size_t>(BUTTON::Btn_Key_Max)> buttonStates;
 
-public:
+public:    
     static BtnModel& getInstance();
 
     BtnModel(const BtnModel&) = delete;

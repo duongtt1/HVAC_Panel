@@ -1,28 +1,14 @@
 #include "BlowerModel.h"
 
-BlowerModel::BlowerModel(QObject* parent)
-    : QObject(parent), blwrStep(0)
-{
-    // Additional initialization if needed
+BlowerModel::BlowerModel(QObject* parent) : QObject(parent), m_blwrStep(0) {}
+
+uint8_t BlowerModel::getBlwrStep() const {
+    return m_blwrStep;
 }
 
-BlowerModel::~BlowerModel()
-{
-
-}
-
-BlowerModel* BlowerModel::getInstance()
-{
-    static BlowerModel instance; // This will be created and destroyed only once
-    return &instance;
-}
-
-uint8_t BlowerModel::getBlwrStep()
-{
-    return blwrStep;
-}
-
-void BlowerModel::setBlwrStep(uint8_t step)
-{
-    blwrStep = step;
+void BlowerModel::setBlwrStep(uint8_t step) {
+    if (m_blwrStep != step) {
+        m_blwrStep = step;
+        emit blwrStepChanged();
+    }
 }

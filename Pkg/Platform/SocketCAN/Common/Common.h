@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+#include <QObject>
 
 #include "SafeQueue.h"
 
@@ -192,7 +193,8 @@ public:
 /**
  * @brief Interface class for CAN messages.
  */
-class ICAN_MSG {
+class ICAN_MSG : public QObject {
+Q_OBJECT
 protected:
     canid_t id;                           /**< CAN identifier. */
     uint16_t periodTimeMs;                /**< Periodic time in milliseconds. */

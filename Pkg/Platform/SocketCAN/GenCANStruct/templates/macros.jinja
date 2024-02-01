@@ -1,0 +1,31 @@
+{% macro lengthSigToDataType(signal) %}
+    {% if signal.length <= 8 %}
+        {% if signal.is_signed %}
+            int8_t
+        {% else %}
+            uint8_t
+        {% endif %}
+    {% elif signal.length <= 16 %}
+        {% if signal.is_signed %}
+            int16_t
+        {% else %}
+            uint16_t
+        {% endif %}
+    {% elif signal.length <= 32 %}
+        {% if signal.is_signed %}
+            int32_t
+        {% else %}
+            uint32_t
+        {% endif %}
+    {% else %}
+        {% if signal.is_signed %}
+            int64_t
+        {% else %}
+            uint64_t
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro QSIG(name, val) -%}
+    {{ name }}Changed({{ val }})
+{%- endmacro %}

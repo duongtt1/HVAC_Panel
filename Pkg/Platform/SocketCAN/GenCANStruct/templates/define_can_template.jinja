@@ -1,3 +1,4 @@
+{% import "macros.jinja" as macros %}
 /* Auto-generated file - DO NOT EDIT */
 #ifndef CNF_CLASS_CAN_H
 #define CNF_CLASS_CAN_H
@@ -7,6 +8,7 @@
 #include <iostream>
 #include <chrono>
 #include <limits> 
+#include <QObject>
 
 #include "../CanDB.h"
 #include "Common.h"
@@ -55,7 +57,7 @@ struct {{ message.name }}_SIGNALS
 
 class {{ message.name }}_MSG : public ICAN_MSG
 {
-    {{ message.name }}_SIGNALS  signals; 
+    Q_OBJECT
 public:
     {{ message.name }}_MSG()
     {
@@ -67,27 +69,22 @@ public:
         this->lastActivated = std::chrono::steady_clock::now();
     }
 
-    ~{{ message.name }}_MSG(){
-
-    }
-
+    ~{{ message.name }}_MSG(){ }
 
     void unpack(const uint8_t* frame) override {
         {% for signal in message.signals %}
-            signals.{{ signal.name }}.value = extractSignalValue<decltype(signals.{{ signal.name }}.value)>(frame, (uint8_t){{ signal.start }}, (uint8_t){{ signal.start + signal.length - 1 }});
+            _signals.{{ signal.name }}.value = extractSignalValue<decltype(_signals.{{ signal.name }}.value)>(frame, (uint8_t){{ signal.start }}, (uint8_t){{ signal.start + signal.length - 1 }});
         {% endfor %}
 
         {% for signal in message.signals -%}
-            {%- for mapping in MapSigFunc %}
-                {%- for sig, info in mapping.items() %}
+            {%- for mapping in MapSigFunc -%}
+                {%- for sig, info in mapping.items() -%}
                     {% if sig == signal.name %}
-            {{ info["Class"] }}::getInstance().{{- info["Method"] }}({{ sig }});
+            emit {{ macros.QSIG(signal.name, "_signals." + signal.name + ".value") }};
                     {% endif %}
-                {%- endfor %}
-            {%- endfor %}
+                {%- endfor -%}
+            {%- endfor -%}
         {% endfor %}
-
-
     }
 
     CanFrame pack() override
@@ -95,7 +92,7 @@ public:
         uint8_t combinedData[CANFD_MAX_DLEN] = {0};  // Assuming MAX_DATA_SIZE is a static constant in CanFrame
 
         uint8_t* buffer = combinedData;
-        copyPropertiesToBuffer(buffer, {% for signal in message.signals %} signals.{{ signal.name }} {% if not loop.last  %}, {% endif %} {% endfor %} );
+        copyPropertiesToBuffer(buffer, {% for signal in message.signals %} _signals.{{ signal.name }} {% if not loop.last  %}, {% endif %} {% endfor %} );
         CanFrame combinedFrame(this->id, combinedData, CANFD_MAX_DLEN);
 
         return combinedFrame;
@@ -105,6 +102,20 @@ public:
     {
         return this->id;
     }
+
+signals:
+{% for signal in message.signals -%}
+    {%- for mapping in MapSigFunc -%}
+        {%- for sig, info in mapping.items() -%}
+            {% if sig == signal.name %}
+    void {{ macros.QSIG( signal.name, macros.lengthSigToDataType(signal)|trim + " value") }};
+            {% endif %}
+        {%- endfor -%}
+    {%- endfor -%}
+{% endfor %}
+
+private:
+    {{ message.name }}_SIGNALS  _signals; 
 };
 
 {% endfor %}

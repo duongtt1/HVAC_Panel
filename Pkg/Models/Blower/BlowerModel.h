@@ -1,25 +1,22 @@
-#include <stdint.h>
+#pragma once
+
 #include <QObject>
+#include <stdint.h>
 
 class BlowerModel : public QObject
 {
     Q_OBJECT
-
-private:
-    uint8_t blwrStep;
-
-    // Private constructor to enforce singleton pattern
-    BlowerModel(QObject* parent = nullptr);
+    Q_PROPERTY(int blwrStep READ getBlwrStep WRITE setBlwrStep NOTIFY blwrStepChanged)
 
 public:
-    static BlowerModel* getInstance();
+    explicit BlowerModel(QObject* parent = nullptr);
 
-    uint8_t getBlwrStep();
+    uint8_t getBlwrStep() const;
     void setBlwrStep(uint8_t step);
 
-    // Delete copy constructor and assignment operator to enforce singleton pattern
-    BlowerModel(const BlowerModel&) = delete;
-    BlowerModel& operator=(const BlowerModel&) = delete;
+signals:
+    void blwrStepChanged();
 
-    ~BlowerModel();
+private:
+    uint8_t m_blwrStep;
 };

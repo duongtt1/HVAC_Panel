@@ -7,6 +7,7 @@
 #include <iostream>
 #include <chrono>
 #include <limits> 
+#include <QObject>
 
 #include "../CanDB.h"
 #include "Common.h"
@@ -35,7 +36,7 @@ struct DATC11_SIGNALS
 
 class DATC11_MSG : public ICAN_MSG
 {
-    DATC11_SIGNALS  signals; 
+    Q_OBJECT
 public:
     DATC11_MSG()
     {
@@ -47,20 +48,15 @@ public:
         this->lastActivated = std::chrono::steady_clock::now();
     }
 
-    ~DATC11_MSG(){
-
-    }
-
+    ~DATC11_MSG(){ }
 
     void unpack(const uint8_t* frame) override {
-            signals.CF_Datc_Type.value = extractSignalValue<decltype(signals.CF_Datc_Type.value)>(frame, (uint8_t)0, (uint8_t)7);
-            signals.CF_Datc_VerMaj.value = extractSignalValue<decltype(signals.CF_Datc_VerMaj.value)>(frame, (uint8_t)8, (uint8_t)15);
-            signals.CF_Datc_VerMin.value = extractSignalValue<decltype(signals.CF_Datc_VerMin.value)>(frame, (uint8_t)16, (uint8_t)23);
-            signals.CR_Datc_OutTempC.value = extractSignalValue<decltype(signals.CR_Datc_OutTempC.value)>(frame, (uint8_t)24, (uint8_t)31);
-            signals.CR_Datc_OutTempF.value = extractSignalValue<decltype(signals.CR_Datc_OutTempF.value)>(frame, (uint8_t)32, (uint8_t)39);
-            signals.CF_Datc_IncarTemp.value = extractSignalValue<decltype(signals.CF_Datc_IncarTemp.value)>(frame, (uint8_t)40, (uint8_t)47);
-
-
+            _signals.CF_Datc_Type.value = extractSignalValue<decltype(_signals.CF_Datc_Type.value)>(frame, (uint8_t)0, (uint8_t)7);
+            _signals.CF_Datc_VerMaj.value = extractSignalValue<decltype(_signals.CF_Datc_VerMaj.value)>(frame, (uint8_t)8, (uint8_t)15);
+            _signals.CF_Datc_VerMin.value = extractSignalValue<decltype(_signals.CF_Datc_VerMin.value)>(frame, (uint8_t)16, (uint8_t)23);
+            _signals.CR_Datc_OutTempC.value = extractSignalValue<decltype(_signals.CR_Datc_OutTempC.value)>(frame, (uint8_t)24, (uint8_t)31);
+            _signals.CR_Datc_OutTempF.value = extractSignalValue<decltype(_signals.CR_Datc_OutTempF.value)>(frame, (uint8_t)32, (uint8_t)39);
+            _signals.CF_Datc_IncarTemp.value = extractSignalValue<decltype(_signals.CF_Datc_IncarTemp.value)>(frame, (uint8_t)40, (uint8_t)47);
 
     }
 
@@ -69,7 +65,7 @@ public:
         uint8_t combinedData[CANFD_MAX_DLEN] = {0};  // Assuming MAX_DATA_SIZE is a static constant in CanFrame
 
         uint8_t* buffer = combinedData;
-        copyPropertiesToBuffer(buffer,  signals.CF_Datc_Type ,   signals.CF_Datc_VerMaj ,   signals.CF_Datc_VerMin ,   signals.CR_Datc_OutTempC ,   signals.CR_Datc_OutTempF ,   signals.CF_Datc_IncarTemp   );
+        copyPropertiesToBuffer(buffer,  _signals.CF_Datc_Type ,   _signals.CF_Datc_VerMaj ,   _signals.CF_Datc_VerMin ,   _signals.CR_Datc_OutTempC ,   _signals.CR_Datc_OutTempF ,   _signals.CF_Datc_IncarTemp   );
         CanFrame combinedFrame(this->id, combinedData, CANFD_MAX_DLEN);
 
         return combinedFrame;
@@ -79,6 +75,11 @@ public:
     {
         return this->id;
     }
+
+signals:
+
+private:
+    DATC11_SIGNALS  _signals; 
 };
 
 struct DATC13_SIGNALS
@@ -111,7 +112,7 @@ struct DATC13_SIGNALS
 
 class DATC13_MSG : public ICAN_MSG
 {
-    DATC13_SIGNALS  signals; 
+    Q_OBJECT
 public:
     DATC13_MSG()
     {
@@ -123,43 +124,38 @@ public:
         this->lastActivated = std::chrono::steady_clock::now();
     }
 
-    ~DATC13_MSG(){
-
-    }
-
+    ~DATC13_MSG(){ }
 
     void unpack(const uint8_t* frame) override {
-            signals.CF_Datc_TempDispUnit.value = extractSignalValue<decltype(signals.CF_Datc_TempDispUnit.value)>(frame, (uint8_t)0, (uint8_t)1);
-            signals.CF_Datc_ModDisp.value = extractSignalValue<decltype(signals.CF_Datc_ModDisp.value)>(frame, (uint8_t)2, (uint8_t)5);
-            signals.CF_Datc_IonClean.value = extractSignalValue<decltype(signals.CF_Datc_IonClean.value)>(frame, (uint8_t)6, (uint8_t)7);
-            signals.CF_Datc_ChgReqDisp.value = extractSignalValue<decltype(signals.CF_Datc_ChgReqDisp.value)>(frame, (uint8_t)8, (uint8_t)9);
-            signals.CF_Datc_IntakeDisp.value = extractSignalValue<decltype(signals.CF_Datc_IntakeDisp.value)>(frame, (uint8_t)10, (uint8_t)11);
-            signals.CF_Datc_AutoDisp.value = extractSignalValue<decltype(signals.CF_Datc_AutoDisp.value)>(frame, (uint8_t)12, (uint8_t)13);
-            signals.CF_Datc_FrDefLed.value = extractSignalValue<decltype(signals.CF_Datc_FrDefLed.value)>(frame, (uint8_t)14, (uint8_t)15);
-            signals.CF_Datc_AutoDefogBlink.value = extractSignalValue<decltype(signals.CF_Datc_AutoDefogBlink.value)>(frame, (uint8_t)16, (uint8_t)17);
-            signals.CF_Datc_ClmScanDisp.value = extractSignalValue<decltype(signals.CF_Datc_ClmScanDisp.value)>(frame, (uint8_t)18, (uint8_t)19);
-            signals.CF_Datc_AqsDisp.value = extractSignalValue<decltype(signals.CF_Datc_AqsDisp.value)>(frame, (uint8_t)20, (uint8_t)21);
-            signals.CF_Datc_AcDisp.value = extractSignalValue<decltype(signals.CF_Datc_AcDisp.value)>(frame, (uint8_t)22, (uint8_t)23);
-            signals.CF_Datc_OpSts.value = extractSignalValue<decltype(signals.CF_Datc_OpSts.value)>(frame, (uint8_t)25, (uint8_t)27);
-            signals.CF_Mtc_MaxAcDisp.value = extractSignalValue<decltype(signals.CF_Mtc_MaxAcDisp.value)>(frame, (uint8_t)28, (uint8_t)29);
-            signals.CF_Datc_DualDisp.value = extractSignalValue<decltype(signals.CF_Datc_DualDisp.value)>(frame, (uint8_t)30, (uint8_t)31);
-            signals.CF_Datc_PwrInf.value = extractSignalValue<decltype(signals.CF_Datc_PwrInf.value)>(frame, (uint8_t)32, (uint8_t)35);
-            signals.CF_Datc_RearManual.value = extractSignalValue<decltype(signals.CF_Datc_RearManual.value)>(frame, (uint8_t)38, (uint8_t)39);
-            signals.CF_Datc_RearAutoDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearAutoDisp.value)>(frame, (uint8_t)40, (uint8_t)41);
-            signals.CF_Datc_RearOffDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearOffDisp.value)>(frame, (uint8_t)42, (uint8_t)43);
-            signals.CF_Datc_RearClimateScnDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearClimateScnDisp.value)>(frame, (uint8_t)44, (uint8_t)45);
-            signals.CF_Datc_RearChgReqDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearChgReqDisp.value)>(frame, (uint8_t)46, (uint8_t)47);
-            signals.CF_Datc_RearModDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearModDisp.value)>(frame, (uint8_t)48, (uint8_t)51);
-            signals.CF_Datc_RearBlwDisp.value = extractSignalValue<decltype(signals.CF_Datc_RearBlwDisp.value)>(frame, (uint8_t)52, (uint8_t)55);
-            signals.CF_Datc_PSModDisp.value = extractSignalValue<decltype(signals.CF_Datc_PSModDisp.value)>(frame, (uint8_t)56, (uint8_t)59);
-            signals.CF_Datc_FrontBlwDisp.value = extractSignalValue<decltype(signals.CF_Datc_FrontBlwDisp.value)>(frame, (uint8_t)60, (uint8_t)63);
+            _signals.CF_Datc_TempDispUnit.value = extractSignalValue<decltype(_signals.CF_Datc_TempDispUnit.value)>(frame, (uint8_t)0, (uint8_t)1);
+            _signals.CF_Datc_ModDisp.value = extractSignalValue<decltype(_signals.CF_Datc_ModDisp.value)>(frame, (uint8_t)2, (uint8_t)5);
+            _signals.CF_Datc_IonClean.value = extractSignalValue<decltype(_signals.CF_Datc_IonClean.value)>(frame, (uint8_t)6, (uint8_t)7);
+            _signals.CF_Datc_ChgReqDisp.value = extractSignalValue<decltype(_signals.CF_Datc_ChgReqDisp.value)>(frame, (uint8_t)8, (uint8_t)9);
+            _signals.CF_Datc_IntakeDisp.value = extractSignalValue<decltype(_signals.CF_Datc_IntakeDisp.value)>(frame, (uint8_t)10, (uint8_t)11);
+            _signals.CF_Datc_AutoDisp.value = extractSignalValue<decltype(_signals.CF_Datc_AutoDisp.value)>(frame, (uint8_t)12, (uint8_t)13);
+            _signals.CF_Datc_FrDefLed.value = extractSignalValue<decltype(_signals.CF_Datc_FrDefLed.value)>(frame, (uint8_t)14, (uint8_t)15);
+            _signals.CF_Datc_AutoDefogBlink.value = extractSignalValue<decltype(_signals.CF_Datc_AutoDefogBlink.value)>(frame, (uint8_t)16, (uint8_t)17);
+            _signals.CF_Datc_ClmScanDisp.value = extractSignalValue<decltype(_signals.CF_Datc_ClmScanDisp.value)>(frame, (uint8_t)18, (uint8_t)19);
+            _signals.CF_Datc_AqsDisp.value = extractSignalValue<decltype(_signals.CF_Datc_AqsDisp.value)>(frame, (uint8_t)20, (uint8_t)21);
+            _signals.CF_Datc_AcDisp.value = extractSignalValue<decltype(_signals.CF_Datc_AcDisp.value)>(frame, (uint8_t)22, (uint8_t)23);
+            _signals.CF_Datc_OpSts.value = extractSignalValue<decltype(_signals.CF_Datc_OpSts.value)>(frame, (uint8_t)25, (uint8_t)27);
+            _signals.CF_Mtc_MaxAcDisp.value = extractSignalValue<decltype(_signals.CF_Mtc_MaxAcDisp.value)>(frame, (uint8_t)28, (uint8_t)29);
+            _signals.CF_Datc_DualDisp.value = extractSignalValue<decltype(_signals.CF_Datc_DualDisp.value)>(frame, (uint8_t)30, (uint8_t)31);
+            _signals.CF_Datc_PwrInf.value = extractSignalValue<decltype(_signals.CF_Datc_PwrInf.value)>(frame, (uint8_t)32, (uint8_t)35);
+            _signals.CF_Datc_RearManual.value = extractSignalValue<decltype(_signals.CF_Datc_RearManual.value)>(frame, (uint8_t)38, (uint8_t)39);
+            _signals.CF_Datc_RearAutoDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearAutoDisp.value)>(frame, (uint8_t)40, (uint8_t)41);
+            _signals.CF_Datc_RearOffDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearOffDisp.value)>(frame, (uint8_t)42, (uint8_t)43);
+            _signals.CF_Datc_RearClimateScnDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearClimateScnDisp.value)>(frame, (uint8_t)44, (uint8_t)45);
+            _signals.CF_Datc_RearChgReqDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearChgReqDisp.value)>(frame, (uint8_t)46, (uint8_t)47);
+            _signals.CF_Datc_RearModDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearModDisp.value)>(frame, (uint8_t)48, (uint8_t)51);
+            _signals.CF_Datc_RearBlwDisp.value = extractSignalValue<decltype(_signals.CF_Datc_RearBlwDisp.value)>(frame, (uint8_t)52, (uint8_t)55);
+            _signals.CF_Datc_PSModDisp.value = extractSignalValue<decltype(_signals.CF_Datc_PSModDisp.value)>(frame, (uint8_t)56, (uint8_t)59);
+            _signals.CF_Datc_FrontBlwDisp.value = extractSignalValue<decltype(_signals.CF_Datc_FrontBlwDisp.value)>(frame, (uint8_t)60, (uint8_t)63);
 
-            TempSide::getInstance().setUnit(CF_Datc_TempDispUnit);
-            SeatMode::getInstance().setSeatModeDriver(CF_Datc_ModDisp);
-            SeatMode::getInstance().setSeatModePassenger(CF_Datc_PSModDisp);
-            Blower::getInstance().setBlwrStep(CF_Datc_FrontBlwDisp);
-
-
+            emit CF_Datc_TempDispUnitChanged(_signals.CF_Datc_TempDispUnit.value);
+            emit CF_Datc_ModDispChanged(_signals.CF_Datc_ModDisp.value);
+            emit CF_Datc_PSModDispChanged(_signals.CF_Datc_PSModDisp.value);
+            emit CF_Datc_FrontBlwDispChanged(_signals.CF_Datc_FrontBlwDisp.value);
     }
 
     CanFrame pack() override
@@ -167,7 +163,7 @@ public:
         uint8_t combinedData[CANFD_MAX_DLEN] = {0};  // Assuming MAX_DATA_SIZE is a static constant in CanFrame
 
         uint8_t* buffer = combinedData;
-        copyPropertiesToBuffer(buffer,  signals.CF_Datc_TempDispUnit ,   signals.CF_Datc_ModDisp ,   signals.CF_Datc_IonClean ,   signals.CF_Datc_ChgReqDisp ,   signals.CF_Datc_IntakeDisp ,   signals.CF_Datc_AutoDisp ,   signals.CF_Datc_FrDefLed ,   signals.CF_Datc_AutoDefogBlink ,   signals.CF_Datc_ClmScanDisp ,   signals.CF_Datc_AqsDisp ,   signals.CF_Datc_AcDisp ,   signals.CF_Datc_OpSts ,   signals.CF_Mtc_MaxAcDisp ,   signals.CF_Datc_DualDisp ,   signals.CF_Datc_PwrInf ,   signals.CF_Datc_RearManual ,   signals.CF_Datc_RearAutoDisp ,   signals.CF_Datc_RearOffDisp ,   signals.CF_Datc_RearClimateScnDisp ,   signals.CF_Datc_RearChgReqDisp ,   signals.CF_Datc_RearModDisp ,   signals.CF_Datc_RearBlwDisp ,   signals.CF_Datc_PSModDisp ,   signals.CF_Datc_FrontBlwDisp   );
+        copyPropertiesToBuffer(buffer,  _signals.CF_Datc_TempDispUnit ,   _signals.CF_Datc_ModDisp ,   _signals.CF_Datc_IonClean ,   _signals.CF_Datc_ChgReqDisp ,   _signals.CF_Datc_IntakeDisp ,   _signals.CF_Datc_AutoDisp ,   _signals.CF_Datc_FrDefLed ,   _signals.CF_Datc_AutoDefogBlink ,   _signals.CF_Datc_ClmScanDisp ,   _signals.CF_Datc_AqsDisp ,   _signals.CF_Datc_AcDisp ,   _signals.CF_Datc_OpSts ,   _signals.CF_Mtc_MaxAcDisp ,   _signals.CF_Datc_DualDisp ,   _signals.CF_Datc_PwrInf ,   _signals.CF_Datc_RearManual ,   _signals.CF_Datc_RearAutoDisp ,   _signals.CF_Datc_RearOffDisp ,   _signals.CF_Datc_RearClimateScnDisp ,   _signals.CF_Datc_RearChgReqDisp ,   _signals.CF_Datc_RearModDisp ,   _signals.CF_Datc_RearBlwDisp ,   _signals.CF_Datc_PSModDisp ,   _signals.CF_Datc_FrontBlwDisp   );
         CanFrame combinedFrame(this->id, combinedData, CANFD_MAX_DLEN);
 
         return combinedFrame;
@@ -177,6 +173,15 @@ public:
     {
         return this->id;
     }
+
+signals:
+    void CF_Datc_TempDispUnitChanged(uint8_t value);
+    void CF_Datc_ModDispChanged(uint8_t value);
+    void CF_Datc_PSModDispChanged(uint8_t value);
+    void CF_Datc_FrontBlwDispChanged(uint8_t value);
+
+private:
+    DATC13_SIGNALS  _signals; 
 };
 
 struct DATC12_SIGNALS
@@ -192,7 +197,7 @@ struct DATC12_SIGNALS
 
 class DATC12_MSG : public ICAN_MSG
 {
-    DATC12_SIGNALS  signals; 
+    Q_OBJECT
 public:
     DATC12_MSG()
     {
@@ -204,28 +209,23 @@ public:
         this->lastActivated = std::chrono::steady_clock::now();
     }
 
-    ~DATC12_MSG(){
-
-    }
-
+    ~DATC12_MSG(){ }
 
     void unpack(const uint8_t* frame) override {
-            signals.CR_Datc_DrTempDispC.value = extractSignalValue<decltype(signals.CR_Datc_DrTempDispC.value)>(frame, (uint8_t)0, (uint8_t)7);
-            signals.CR_Datc_DrTempDispF.value = extractSignalValue<decltype(signals.CR_Datc_DrTempDispF.value)>(frame, (uint8_t)8, (uint8_t)15);
-            signals.CR_Datc_PsTempDispC.value = extractSignalValue<decltype(signals.CR_Datc_PsTempDispC.value)>(frame, (uint8_t)16, (uint8_t)23);
-            signals.CR_Datc_PsTempDispF.value = extractSignalValue<decltype(signals.CR_Datc_PsTempDispF.value)>(frame, (uint8_t)24, (uint8_t)31);
-            signals.CR_Datc_RearDrTempDispC.value = extractSignalValue<decltype(signals.CR_Datc_RearDrTempDispC.value)>(frame, (uint8_t)40, (uint8_t)47);
-            signals.CR_Datc_RearDrTempDispF.value = extractSignalValue<decltype(signals.CR_Datc_RearDrTempDispF.value)>(frame, (uint8_t)48, (uint8_t)55);
-            signals.CF_Datc_CO2_Warning.value = extractSignalValue<decltype(signals.CF_Datc_CO2_Warning.value)>(frame, (uint8_t)56, (uint8_t)63);
+            _signals.CR_Datc_DrTempDispC.value = extractSignalValue<decltype(_signals.CR_Datc_DrTempDispC.value)>(frame, (uint8_t)0, (uint8_t)7);
+            _signals.CR_Datc_DrTempDispF.value = extractSignalValue<decltype(_signals.CR_Datc_DrTempDispF.value)>(frame, (uint8_t)8, (uint8_t)15);
+            _signals.CR_Datc_PsTempDispC.value = extractSignalValue<decltype(_signals.CR_Datc_PsTempDispC.value)>(frame, (uint8_t)16, (uint8_t)23);
+            _signals.CR_Datc_PsTempDispF.value = extractSignalValue<decltype(_signals.CR_Datc_PsTempDispF.value)>(frame, (uint8_t)24, (uint8_t)31);
+            _signals.CR_Datc_RearDrTempDispC.value = extractSignalValue<decltype(_signals.CR_Datc_RearDrTempDispC.value)>(frame, (uint8_t)40, (uint8_t)47);
+            _signals.CR_Datc_RearDrTempDispF.value = extractSignalValue<decltype(_signals.CR_Datc_RearDrTempDispF.value)>(frame, (uint8_t)48, (uint8_t)55);
+            _signals.CF_Datc_CO2_Warning.value = extractSignalValue<decltype(_signals.CF_Datc_CO2_Warning.value)>(frame, (uint8_t)56, (uint8_t)63);
 
-            TempSide::getInstance().setTempDrC(CR_Datc_DrTempDispC);
-            TempSide::getInstance().setTempDrF(CR_Datc_DrTempDispF);
-            TempSide::getInstance().setTempPsC(CR_Datc_PsTempDispC);
-            TempSide::getInstance().setTempPsF(CR_Datc_PsTempDispF);
-            TempSide::getInstance().setTempRearC(CR_Datc_RearDrTempDispC);
-            TempSide::getInstance().setTempRearF(CR_Datc_RearDrTempDispF);
-
-
+            emit CR_Datc_DrTempDispCChanged(_signals.CR_Datc_DrTempDispC.value);
+            emit CR_Datc_DrTempDispFChanged(_signals.CR_Datc_DrTempDispF.value);
+            emit CR_Datc_PsTempDispCChanged(_signals.CR_Datc_PsTempDispC.value);
+            emit CR_Datc_PsTempDispFChanged(_signals.CR_Datc_PsTempDispF.value);
+            emit CR_Datc_RearDrTempDispCChanged(_signals.CR_Datc_RearDrTempDispC.value);
+            emit CR_Datc_RearDrTempDispFChanged(_signals.CR_Datc_RearDrTempDispF.value);
     }
 
     CanFrame pack() override
@@ -233,7 +233,7 @@ public:
         uint8_t combinedData[CANFD_MAX_DLEN] = {0};  // Assuming MAX_DATA_SIZE is a static constant in CanFrame
 
         uint8_t* buffer = combinedData;
-        copyPropertiesToBuffer(buffer,  signals.CR_Datc_DrTempDispC ,   signals.CR_Datc_DrTempDispF ,   signals.CR_Datc_PsTempDispC ,   signals.CR_Datc_PsTempDispF ,   signals.CR_Datc_RearDrTempDispC ,   signals.CR_Datc_RearDrTempDispF ,   signals.CF_Datc_CO2_Warning   );
+        copyPropertiesToBuffer(buffer,  _signals.CR_Datc_DrTempDispC ,   _signals.CR_Datc_DrTempDispF ,   _signals.CR_Datc_PsTempDispC ,   _signals.CR_Datc_PsTempDispF ,   _signals.CR_Datc_RearDrTempDispC ,   _signals.CR_Datc_RearDrTempDispF ,   _signals.CF_Datc_CO2_Warning   );
         CanFrame combinedFrame(this->id, combinedData, CANFD_MAX_DLEN);
 
         return combinedFrame;
@@ -243,6 +243,17 @@ public:
     {
         return this->id;
     }
+
+signals:
+    void CR_Datc_DrTempDispCChanged(uint8_t value);
+    void CR_Datc_DrTempDispFChanged(uint8_t value);
+    void CR_Datc_PsTempDispCChanged(uint8_t value);
+    void CR_Datc_PsTempDispFChanged(uint8_t value);
+    void CR_Datc_RearDrTempDispCChanged(uint8_t value);
+    void CR_Datc_RearDrTempDispFChanged(uint8_t value);
+
+private:
+    DATC12_SIGNALS  _signals; 
 };
 
 struct DATC14_SIGNALS
@@ -260,7 +271,7 @@ struct DATC14_SIGNALS
 
 class DATC14_MSG : public ICAN_MSG
 {
-    DATC14_SIGNALS  signals; 
+    Q_OBJECT
 public:
     DATC14_MSG()
     {
@@ -272,23 +283,18 @@ public:
         this->lastActivated = std::chrono::steady_clock::now();
     }
 
-    ~DATC14_MSG(){
-
-    }
-
+    ~DATC14_MSG(){ }
 
     void unpack(const uint8_t* frame) override {
-            signals.CF_Datc_AqsLevelOut.value = extractSignalValue<decltype(signals.CF_Datc_AqsLevelOut.value)>(frame, (uint8_t)0, (uint8_t)3);
-            signals.CF_Datc_DiagMode.value = extractSignalValue<decltype(signals.CF_Datc_DiagMode.value)>(frame, (uint8_t)6, (uint8_t)7);
-            signals.CR_Datc_SelfDiagCode.value = extractSignalValue<decltype(signals.CR_Datc_SelfDiagCode.value)>(frame, (uint8_t)8, (uint8_t)15);
-            signals.DATC_SyncDisp.value = extractSignalValue<decltype(signals.DATC_SyncDisp.value)>(frame, (uint8_t)16, (uint8_t)19);
-            signals.DATC_OffDisp.value = extractSignalValue<decltype(signals.DATC_OffDisp.value)>(frame, (uint8_t)20, (uint8_t)21);
-            signals.DATC_SmartVentDisp.value = extractSignalValue<decltype(signals.DATC_SmartVentDisp.value)>(frame, (uint8_t)22, (uint8_t)23);
-            signals.DATC_SmartVentOnOffStatus.value = extractSignalValue<decltype(signals.DATC_SmartVentOnOffStatus.value)>(frame, (uint8_t)24, (uint8_t)25);
-            signals.DATC_AutoDefogSysOff_Disp.value = extractSignalValue<decltype(signals.DATC_AutoDefogSysOff_Disp.value)>(frame, (uint8_t)26, (uint8_t)27);
-            signals.DATC_ADSDisp.value = extractSignalValue<decltype(signals.DATC_ADSDisp.value)>(frame, (uint8_t)28, (uint8_t)29);
-
-
+            _signals.CF_Datc_AqsLevelOut.value = extractSignalValue<decltype(_signals.CF_Datc_AqsLevelOut.value)>(frame, (uint8_t)0, (uint8_t)3);
+            _signals.CF_Datc_DiagMode.value = extractSignalValue<decltype(_signals.CF_Datc_DiagMode.value)>(frame, (uint8_t)6, (uint8_t)7);
+            _signals.CR_Datc_SelfDiagCode.value = extractSignalValue<decltype(_signals.CR_Datc_SelfDiagCode.value)>(frame, (uint8_t)8, (uint8_t)15);
+            _signals.DATC_SyncDisp.value = extractSignalValue<decltype(_signals.DATC_SyncDisp.value)>(frame, (uint8_t)16, (uint8_t)19);
+            _signals.DATC_OffDisp.value = extractSignalValue<decltype(_signals.DATC_OffDisp.value)>(frame, (uint8_t)20, (uint8_t)21);
+            _signals.DATC_SmartVentDisp.value = extractSignalValue<decltype(_signals.DATC_SmartVentDisp.value)>(frame, (uint8_t)22, (uint8_t)23);
+            _signals.DATC_SmartVentOnOffStatus.value = extractSignalValue<decltype(_signals.DATC_SmartVentOnOffStatus.value)>(frame, (uint8_t)24, (uint8_t)25);
+            _signals.DATC_AutoDefogSysOff_Disp.value = extractSignalValue<decltype(_signals.DATC_AutoDefogSysOff_Disp.value)>(frame, (uint8_t)26, (uint8_t)27);
+            _signals.DATC_ADSDisp.value = extractSignalValue<decltype(_signals.DATC_ADSDisp.value)>(frame, (uint8_t)28, (uint8_t)29);
 
     }
 
@@ -297,7 +303,7 @@ public:
         uint8_t combinedData[CANFD_MAX_DLEN] = {0};  // Assuming MAX_DATA_SIZE is a static constant in CanFrame
 
         uint8_t* buffer = combinedData;
-        copyPropertiesToBuffer(buffer,  signals.CF_Datc_AqsLevelOut ,   signals.CF_Datc_DiagMode ,   signals.CR_Datc_SelfDiagCode ,   signals.DATC_SyncDisp ,   signals.DATC_OffDisp ,   signals.DATC_SmartVentDisp ,   signals.DATC_SmartVentOnOffStatus ,   signals.DATC_AutoDefogSysOff_Disp ,   signals.DATC_ADSDisp   );
+        copyPropertiesToBuffer(buffer,  _signals.CF_Datc_AqsLevelOut ,   _signals.CF_Datc_DiagMode ,   _signals.CR_Datc_SelfDiagCode ,   _signals.DATC_SyncDisp ,   _signals.DATC_OffDisp ,   _signals.DATC_SmartVentDisp ,   _signals.DATC_SmartVentOnOffStatus ,   _signals.DATC_AutoDefogSysOff_Disp ,   _signals.DATC_ADSDisp   );
         CanFrame combinedFrame(this->id, combinedData, CANFD_MAX_DLEN);
 
         return combinedFrame;
@@ -307,6 +313,11 @@ public:
     {
         return this->id;
     }
+
+signals:
+
+private:
+    DATC14_SIGNALS  _signals; 
 };
 
 

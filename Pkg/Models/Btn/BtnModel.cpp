@@ -1,6 +1,6 @@
 #include "BtnModel.h"
 
-BtnModel::BtnModel() : BtnModel::buttonStates{} {}
+BtnModel::BtnModel(){}
 
 
 BtnModel& BtnModel::getInstance() {
